@@ -1,0 +1,13 @@
+eval "$(ssh-agent -s)"
+ssh-add /home/b01-503/chip
+ssh -T git@github.com	; проверка синхронизации
+cd
+git status
+git add .
+git commit -m "описание" 
+git pull origin main	; синхронизация
+git pusg origin main
+git status
+
+pwd; текущая папка
+ls ее содержимое

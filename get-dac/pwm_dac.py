@@ -2,26 +2,26 @@ import RPi.GPIO as GPIO
 
 GPIO.setmode(GPIO.BCM)
 
-bits = [16, 20, 21, 25, 26, 17, 27, 22]
-GPIO.setup (bits, GPIO.OUT)
-
-class R2R_DAC:
-    def __init__(self, gpio_bits, dynamic_range, verbose = False):
-        self.gpio_bits = gpio_bits
+class PWM_DAC:
+    def __init__(self, gpio_pin, pwm_freq, dynamic_range, verbose = False):
+        self.gpio_pin = gpio_pin
         self.dynamic_range = dynamic_range
+        self.pem_freq = pwm_freq
         self.verbose = verbose
 
         GPIO.setmode(GPIO.BCM)
-        GPIO.setup(self.gpio_bits, GPIO.OUT, initial = 0)
+        GPIO.setup(self.gpio_pin, GPIO.OUT, initial = 0)
+
+        self.pwm = GPIO.PWM (gpio_pin, pwm_freq)
 
     def deinit(self):
-        GPIO.output(self.gpio_bits, 0)
+        GPIO.output(self.gpio_pin, 0)
         GPIO.cleanup()
 
-    def set_number(self, num):
+    """def set_number(self, num):
         dac = [int(elements) for elements in bin(num)[2: ].zfill(8)]
-        GPIO.output (bits, dac)
-        return dac
+        GPIO.output (self.gpio_pin, dac)
+        return dac"""
     
 
     def set_voltage(self, voltage):
@@ -30,15 +30,15 @@ class R2R_DAC:
             print ("Устанавливаем 0.0 В")
             return 0
 
-        number =  int(voltage / self.dynamic_range * 255)
-        self.set_number (number)
-        print ("Число на вход ЦАП: ", (number))
-        print (". Его двоичное представление: ", (self.set_number (number)))
+        duty = 100 * voltage / self.dynamic_range
+        print ("Коэффициент заполнения: ", (duty))
+        self.pwm.start (duty)
+        #print (". Его двоичное представление: ", (self.set_number (number)))
 
 
 if __name__ == "__main__":
     try:
-        dac = R2R_DAC ([16, 20, 21, 25, 26, 17, 27, 22], 3.183, True)
+        dac = PWM_DAC (12, 500, 3.290, True)
 
         while True:
             try:
