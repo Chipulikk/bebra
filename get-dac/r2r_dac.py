@@ -32,8 +32,10 @@ class R2R_DAC:
 
         number =  int(voltage / self.dynamic_range * 255)
         self.set_number (number)
-        print ("Число на вход ЦАП: ", (number))
-        print (". Его двоичное представление: ", (self.set_number (number)))
+
+        if self.verbose:
+            print ("Число на вход ЦАП: ", (number))
+            print (". Его двоичное представление: ", (self.set_number (number)))
 
 
 if __name__ == "__main__":

@@ -8,7 +8,7 @@ def wait_for_sampling_period (sampling_frequency, start_time = None):
     if start_time is None:
         start_time = time.time()
     
-    period = 1.0 / sampling_freq
+    period = 1.0 / sampling_frequency
     done = time.time() - start_time
 
     if done < period:

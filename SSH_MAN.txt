@@ -6,7 +6,7 @@ git status
 git add .
 git commit -m "описание" 
 git pull origin main	; синхронизация
-git pusg origin main
+git push origin main
 git status
 
 pwd; текущая папка
